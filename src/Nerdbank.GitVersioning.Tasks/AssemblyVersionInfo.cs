@@ -4,7 +4,7 @@
     using System.CodeDom;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -95,6 +95,10 @@
                 IsPartial = true,
                 TypeAttributes = TypeAttributes.NotPublic | TypeAttributes.Sealed,
             };
+
+            // Add [ExcludeFromCodeCoverage] attribute to the generated `ThisAssembly` class.
+            thisAssembly.CustomAttributes.Add(
+                DeclareAttribute(typeof(ExcludeFromCodeCoverageAttribute), new string[] {}));
 
             // CodeDOM doesn't support static classes, so hide the constructor instead.
             thisAssembly.Members.Add(new CodeConstructor { Attributes = MemberAttributes.Private });
